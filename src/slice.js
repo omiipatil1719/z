@@ -10,30 +10,27 @@ export const todoSlice = createSlice({
     reducers: {
         add: (state, action) => {
             state.todos.unshift({
-                id: new Date().toISOString(),
+                id: Math.floor(Math.random()*1100),
                 title: action.payload,
             });
         },
-        deleteItem: (state, action)=>{
-            const deleteitem=state.todos.filter((item)=> item.id !== action.payload);
+        deleteItem: (state, action) => {
+            const deleteitem = state.todos.filter((item) => item.id !== action.payload);
             state.todos = deleteitem;
         },
 
-        editItem:(state,action)=>{
-            const items = state.todos.map((item) => {
-                if (item.id === action.payload.id) {
-                    return {
-                        ...item,
-                        title: action.payload.title
-                    };
-                }
-                else { return item; }
-            });
-            state.todos = items;
+        editItem: (state, action) => {
+            var todos = [...state.todos]
+            const findIndex = todos.findIndex((item) => item.id == action.payload.id)
+            if (findIndex > -1) {
+                console.log('todos[findIndex]', todos[findIndex], action.payload)
+                state.todos[findIndex] = action.payload
+            }
         }
     }
 });
 
-export const { add, deleteItem, editItem} = todoSlice.actions;
+
+export const { add, deleteItem, editItem } = todoSlice.actions;
 
 export const selector = state => state.todo.todos;

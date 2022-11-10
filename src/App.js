@@ -43,14 +43,27 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selector, add, deleteItem } from './slice';
+import EventClick from './EventClick';
 
 const App = () => {
   const [inputval, setinputval] = useState('')
+  const [popup, setpopup] = useState(false)
+  const [edittextId, setedittextId] = useState()
+  const [editTitle, seteditTitle] = useState()
+
   const dispatch = useDispatch();
   const todo = useSelector(selector)
+  console.log(todo, 'todotodo')
+
 
   const getvalue = (e) => {
     setinputval(e.target.value);
+  }
+
+  const Showpopup = (id, title) => {
+    setpopup(true);
+    setedittextId(id);
+    seteditTitle(title)
   }
   return (
     <>
@@ -70,13 +83,14 @@ const App = () => {
             todo.map((itemval) => {
               return (
                 <>
+                
+                <ol>
                   <div className='itembox'>
                     <button className='deletebtn' onClick={() => { dispatch(deleteItem(itemval.id)) }}></button>
-                    <li key={itemval.id}>{itemval.title}
-                      <button className='editbtn' onClick={() => { }}></button>
-                    </li>
+                    <li key={itemval.id}>{itemval.title} </li>
+                      <button className='editbtn' onClick={() => Showpopup(itemval.id, itemval.title)}></button>
                   </div>
-
+                  </ol>
                 </>
               )
             })
@@ -84,6 +98,19 @@ const App = () => {
         </div>
 
       </div>
+
+      {
+        popup && (
+          <EventClick
+            show={popup}
+            onHide={() => setpopup(false)}
+            edittextId={edittextId}
+            editTitle={editTitle}
+            seteditTitle={seteditTitle}
+          />
+        )
+
+      }
     </>
 
   )
